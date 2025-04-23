@@ -1,0 +1,24 @@
+FROM scriptcase:php81 AS sc9
+
+RUN mkdir /scriptcase
+
+RUN curl https://www.sourceguardian.com/loaders/download/loaders.linux-x86_64.zip \
+-o /scriptcase/loaders.linux-x86_64.zip
+
+RUN curl https://downloads.scriptcase.net/v9/packs/scriptcase-9.12.006-pt_br-php8.1.zip \
+-o /scriptcase/scriptcase.zip
+
+
+# Habilitar o SourceGuardian
+RUN unzip /scriptcase/loaders.linux-x86_64.zip -d /scriptcase/guardian
+
+RUN cp /scriptcase/guardian/ixed.8.1.lin /usr/lib/php/20210902
+
+RUN echo 'zend_extension = "/usr/lib/php/20210902/ixed.8.1.lin"' > /etc/php/current/mods-available/zend.ini
+
+# Habilitar Scriptcase
+RUN unzip /scriptcase/scriptcase.zip -d /var/www
+
+RUN chmod -R 777 /var/www
+
+RUN mv /var/www/scriptcase-9.12.006-pt_br-php8.1 /var/www/scriptcase
