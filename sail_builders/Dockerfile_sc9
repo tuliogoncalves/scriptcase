@@ -1,5 +1,10 @@
 FROM scriptcase:php81 AS sc9
 
+# Install a few required packages
+RUN apt-get update -qq -y && \
+    apt install -qq -y \
+    git
+
 RUN mkdir /scriptcase
 
 RUN curl https://www.sourceguardian.com/loaders/download/loaders.linux-x86_64.zip \
@@ -22,3 +27,11 @@ RUN unzip /scriptcase/scriptcase.zip -d /var/www
 RUN chmod -R 777 /var/www
 
 RUN mv /var/www/scriptcase-9.12.006-pt_br-php8.1 /var/www/scriptcase
+
+RUN git clone --single-branch --branch 10.x https://github.com/laravel/laravel.git  /laravel
+
+WORKDIR /laravel
+
+RUN composer install
+
+WORKDIR /var/www
